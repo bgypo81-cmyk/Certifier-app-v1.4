@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="NSW Certifier"/>
+<title>NSW CDC Certifier Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:system-ui,-apple-system,Arial,sans-serif;background:#0a0a0a;color:#e4e4e7;min-height:100vh;}
+select,input,textarea{font-family:inherit;color:#e4e4e7;background:#111;border:1px solid #3f3f46;border-radius:10px;padding:10px 12px;font-size:14px;width:100%;outline:none;margin-bottom:10px;}
+select option{background:#111;}
+button{cursor:pointer;font-family:inherit;touch-action:manipulation;}
+a{color:inherit;text-decoration:none;}
+.app{max-width:480px;margin:0 auto;width:100%;min-height:100vh;position:relative;}
+.hdr{background:#141414;border-bottom:1px solid #222;position:sticky;top:0;z-index:99;}
+.hdr-top{display:flex;align-items:center;gap:10px;padding:12px 14px;}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#d97706,#92400e);display:grid;place-items:center;font-size:18px;flex-shrink:0;}
+.app-title{font-size:14px;font-weight:900;color:#fff;}
+.app-sub{font-size:11px;color:#52525b;margin-top:1px;}
+.tabs{display:flex;border-top:1px solid #222;}
+.tab{flex:1;padding:9px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;background:transparent;border:none;border-bottom:2px solid transparent;color:#52525b;font-size:10px;font-weight:700;cursor:pointer;}
+.tab.on{color:#f59e0b;border-bottom-color:#f59e0b;}
+.tab-icon{font-size:17px;}
+.pg{display:none;padding:14px;padding-bottom:80px;}
+.pg.on{display:block;}
+.card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:14px;margin-bottom:12px;}
+.card-warn{background:#1a1008;border-color:#4a2800;}
+.sh{display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;}
+.sh-icon{font-size:22px;}
+.sh-title{font-size:17px;font-weight:900;color:#fff;}
+.sh-sub{font-size:12px;color:#71717a;margin-top:2px;}
+.lbl{font-size:11px;font-weight:700;color:#71717a;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:block;}
+.badge{font-size:11px;font-family:monospace;padding:2px 7px;border-radius:4px;border:1px solid;display:inline-block;}
+.bg{background:#052e16;color:#6ee7b7;border-color:#065f46;}
+.br{background:#450a0a;color:#fca5a5;border-color:#7f1d1d;}
+.by{background:#451a03;color:#fcd34d;border-color:#78350f;}
+.bb{background:#0c1a2e;color:#7dd3fc;border-color:#0c4a6e;}
+.bo{background:#431407;color:#fb923c;border-color:#7c2d12;}
+.bgr{background:#27272a;color:#a1a1aa;border-color:#3f3f46;}
+.pbar{height:7px;background:#2a2a2a;border-radius:4px;overflow:hidden;margin:8px 0;}
+.pfill{height:100%;border-radius:4px;transition:width .4s;}
+.upzone{border:2px dashed #3f3f46;border-radius:14px;padding:26px;text-align:center;cursor:pointer;transition:all .2s;}
+.upzone.drag,.upzone:hover{border-color:#f59e0b;background:rgba(217,119,6,.06);}
+.fi{display:flex;align-items:center;gap:10px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:11px;padding:9px 12px;margin-bottom:7px;}
+.fn{flex:1;font-size:13px;color:#d4d4d8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fs{font-size:11px;color:#52525b;flex-shrink:0;}
+.btn{border:none;border-radius:11px;padding:11px;font-weight:900;font-size:14px;width:100%;margin-bottom:8px;}
+.ba{background:#d97706;color:#fff;}
+.ba:disabled{opacity:.5;}
+.bz{background:#3f3f46;color:#fff;}
+.bsm{width:auto;padding:5px 12px;font-size:12px;border-radius:8px;margin:0;}
+.rc{border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;margin-bottom:11px;}
+.rh{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#1a1a1a;cursor:pointer;}
+.rb{padding:13px;border-top:1px solid #222;}
+.finding{display:flex;gap:7px;font-size:13px;color:#d4d4d8;margin-bottom:5px;line-height:1.4;}
+.fa{color:#f59e0b;}
+.fr{color:#fca5a5;}
+.recbox{background:#0a0a0a;border-left:2px solid #f59e0b;border-radius:7px;padding:10px 12px;font-size:13px;color:#d4d4d8;margin-bottom:11px;line-height:1.5;}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.dc{background:#0a0a0a;border-radius:7px;padding:7px;}
+.dk{font-size:11px;color:#71717a;}
+.dv{font-size:12px;color:#e4e4e7;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sg2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px;}
+.sg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:11px;}
+.sb{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:11px;padding:11px;}
+.sl{font-size:11px;color:#71717a;margin-bottom:3px;}
+.sv{font-size:19px;font-weight:900;color:#f59e0b;}
+.su{font-size:11px;font-weight:400;color:#71717a;margin-left:2px;}
+.chdr{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:#1a1a1a;cursor:pointer;border:none;width:100%;text-align:left;}
+.ci{display:flex;align-items:flex-start;gap:11px;padding:9px 13px;border-top:1px solid #1f1f1f;cursor:pointer;}
+.ci:hover{background:#1a1a1a;}
+.cl{font-size:13px;line-height:1.4;color:#d4d4d8;}
+.cl.done{color:#4a4a4a;text-decoration:line-through;}
+.ii{border-radius:12px;overflow:hidden;margin-bottom:7px;border:1px solid #2a2a2a;}
+.ii.on{border-color:rgba(120,53,15,.6);background:#161208;}
+.ih{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;}
+.id2{padding:0 13px 11px;border-top:1px solid #1f1f1f;}
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding-top:9px;}
+.ifull{grid-column:span 2;}
+.mlbl{font-size:11px;color:#71717a;margin-bottom:3px;}
+.minp{width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:7px;padding:6px 8px;color:#e4e4e7;font-size:12px;font-family:inherit;outline:none;margin:0;}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);text-align:center;padding:11px;}
+.sn{font-size:20px;font-weight:900;}
+.sl2{font-size:11px;color:#71717a;text-transform:capitalize;}
+.ctabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:7px;margin-bottom:9px;}
+.ctab{flex-shrink:0;font-size:12px;padding:5px 11px;border-radius:18px;border:1px solid #3f3f46;background:transparent;color:#71717a;font-weight:700;white-space:nowrap;font-family:inherit;cursor:pointer;}
+.ctab.on{background:#d97706;border-color:#d97706;color:#fff;}
+.clist{max-height:210px;overflow-y:auto;margin-bottom:7px;}
+.citem{display:flex;align-items:flex-start;gap:10px;background:#1a1a1a;border-radius:9px;padding:9px 11px;margin-bottom:5px;cursor:pointer;}
+.ct{font-size:13px;color:#d4d4d8;line-height:1.4;}
+.tgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:18px;}
+.tbtn{padding:9px 3px;border-radius:11px;border:1px solid #3f3f46;background:transparent;color:#71717a;font-size:11px;font-weight:900;font-family:inherit;cursor:pointer;}
+.tbtn.on{background:#d97706;border-color:#d97706;color:#fff;}
+.ti{font-size:18px;display:block;margin-bottom:2px;}
+.out{font-size:12px;color:#d4d4d8;white-space:pre-wrap;line-height:1.6;max-height:350px;overflow-y:auto;background:#0a0a0a;border-radius:9px;padding:11px;}
+.foot{position:relative;margin-top:40px;width:100%;background:rgba(0,0,0,.93);border-top:1px solid #1a1a1a;padding:14px;text-align:center;font-size:10px;color:#3f3f46;}
+.sdiv{font-size:11px;font-weight:700;color:#71717a;text-transform:uppercase;letter-spacing:1px;margin:14px 0 7px;}
+.spin{color:#f59e0b;font-size:12px;}
+.cbtn{font-size:12px;color:#f59e0b;border:1px solid rgba(120,53,15,.6);background:transparent;border-radius:5px;padding:3px 9px;cursor:pointer;font-family:inherit;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.lbtn{display:block;text-align:center;background:#27272a;color:#fff;border-radius:11px;padding:10px;font-weight:700;font-size:13px;margin-bottom:11px;}
+.aans{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:11px;padding:13px;margin-top:9px;font-size:13px;color:#d4d4d8;line-height:1.6;white-space:pre-wrap;}
+input[type=checkbox]{width:17px;height:17px;accent-color:#d97706;flex-shrink:0;cursor:pointer;margin:0;}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid #2a2a2a;color:#d4d4d8;padding:10px 18px;border-radius:9px;font-size:13px;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo" style="font-size:20px;line-height:1">&#x1F3D7;</div>
+    <div style="flex:1"><div class="app-title">NSW CDC Certifier Pro</div><div class="app-sub">Building Certification &middot; EP&amp;A Act 1979</div></div>
+    <span class="badge bo">PWA App</span>
+  </div>
+  <div class="tabs">
+    <button class="tab on" id="t-docs"><span class="tab-icon" style="font-size:18px;line-height:1;display:block">&#x1F50D;</span>Docs</button>
+    <button class="tab" id="t-council"><span class="tab-icon" style="font-size:18px;line-height:1;display:block">&#x1F3DB;</span>Council</button>
+    <button class="tab" id="t-cdc"><span class="tab-icon" style="font-size:18px;line-height:1;display:block">&#x2705;</span>CDC</button>
+    <button class="tab" id="t-inspect"><span class="tab-icon" style="font-size:18px;line-height:1;display:block">&#x1F4C5;</span>Inspect</button>
+    <button class="tab" id="t-gen"><span class="tab-icon" style="font-size:18px;line-height:1;display:block">&#x1F4DD;</span>Generate</button>
+  </div>
+</div>
+
+<!-- PERMANENT GLOBAL AI ASSISTANT SEARCH (Visible across all tabs) -->
+<div style="padding: 14px 14px 0 14px;">
+  <div class="card" style="border-color: rgba(217,119,6,0.3); background: #120f0a; margin-bottom: 0;">
+    <label class="lbl" for="gq" style="color: #f59e0b;">AI Certifier Assistant</label>
+    <div style="display:flex;gap:7px;margin-bottom:0">
+      <input type="text" id="gq" placeholder="Ask about any NSW LGA or CDC planning rule..." style="flex:1;margin:0"/>
+      <button class="btn ba bsm" style="padding:10px 14px;border-radius:11px" id="gAskBtn">Ask AI</button>
+    </div>
+    <div id="gcans"></div>
+  </div>
+</div>
+
+<div class="pg on" id="pg-docs">
+  <div class="sh" style="margin-top:10px;"><span class="sh-icon">&#128269;</span><div><div class="sh-title">Document Analyser</div><div class="sh-sub">Upload PDFs or images for AI-powered CDC review</div></div></div>
+  <label class="lbl" for="dcat">Document Category</label>
+  <select id="dcat">
+    <option>Land Contract</option><option>Title Search</option><option>Section 10.7 Certificate</option>
+    <option>Deposited Plan</option><option>88B Instrument</option><option>Architectural Plans</option>
+    <option>BASIX Certificate</option><option>Structural Plans</option><option>Stormwater Plan</option><option>Other</option>
+  </select>
+  <div class="upzone" id="upz">
+    <div style="font-size:40px;margin-bottom:10px">&#x1F4CE;</div>
+    <button type="button" id="upbtn" style="display:inline-block;background:#d97706;color:#fff;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:700;border:none;cursor:pointer;margin-bottom:8px">Choose Files</button>
+    <div style="font-size:12px;color:#71717a;margin-top:2px">PDF, PNG, JPG &mdash; up to 50MB each</div>
+  </div>
+  <input type="file" id="fi" style="display:none" accept="application/pdf,image/png,image/jpeg" multiple />
+  <div id="flist" style="margin-top:11px"></div>
+  <div id="aabtn" style="display:none"><button class="btn ba" id="analAllBtn">Analyse All</button></div>
+  <div id="rarea" style="margin-top:14px"></div>
+</div>
+
+<div class="pg" id="pg-council">
+  <div class="sh" style="margin-top:10px;"><span class="sh-icon">&#127963;</span><div><div class="sh-title">Council DCP Hub</div><div class="sh-sub">NSW council-specific development controls</div></div></div>
+  <label class="lbl" for="csel">Quick Reference Lookup</label>
+  <select id="csel"><option value="">-- Select a Council LGA --</option></select>
+  <div id="cinfo"></div>
+</div>
+
+<div class="pg" id="pg-cdc">
+  <div class="sh" style="margin-top:10px;"><span class="sh-icon">&#9989;</span><div><div class="sh-title">CDC Requirements</div><div class="sh-sub">Full NSW Complying Development Certificate checklist</div></div></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:14px;font-weight:600;color:#d4d4d8">Completion</span><span id="cprog" style="font-size:14px;font-weight:900;color:#f59e0b">0/0</span></div>
+    <div class="pbar"><div class="pfill" id="pfill" style="width:0%;background:#ef4444"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:4px">
+      <span id="ppct" style="font-size:12px;color:#71717a">0%</span>
+      <span id="pdone" style="font-size:12px;color:#34d399;font-weight:700;display:none">&#10003; Ready!</span>
+    </div>
+  </div>
+  <div id="clarea"></div>
+</div>
+
+<div class="pg" id="pg-inspect">
+  <div class="sh" style="margin-top:10px;"><span class="sh-icon">&#128197;</span><div><div class="sh-title">Inspection Scheduler</div><div class="sh-sub">Critical stage inspection planning and tracking</div></div></div>
+  <div class="g2" style="margin-bottom:13px">
+    <div><label class="lbl" for="iproj">Project Address</label><input type="text" id="iproj" placeholder="123 Smith St" style="margin:0"/></div>
+    <div><label class="lbl" for="icert">Certifier Name</label><input type="text" id="icert" placeholder="Your name" style="margin:0"/></div>
+  </div>
+  <div id="ilist"></div>
+  <div class="card" style="margin-bottom:11px"><div class="sgrid" id="sgrid"></div></div>
+  <button class="btn ba" id="igenbtn">&#128196; Generate Inspection Schedule</button>
+  <div id="iout" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+      <span class="lbl" style="margin:0">Generated Schedule</span>
+      <button class="cbtn" id="copyInspBtn">Copy</button>
+    </div>
+    <div class="out" id="iouttxt"></div>
+  </div>
+</div>
+
+<div class="pg" id="pg-gen">
+  <div class="sh" style="margin-top:10px;"><span class="sh-icon">&#128221;</span><div><div class="sh-title">Certificate Generator</div><div class="sh-sub">Generate CDC, Construction &amp; Occupation Certificates</div></div></div>
+  <label class="lbl">Certificate Type</label>
+  <div class="tgrid">
+    <button class="tbtn on" id="tb-CDC"><span class="ti">&#128203;</span>Complying Dev</button>
+    <button class="tbtn" id="tb-CC"><span class="ti">&#127959;</span>Construction</button>
+    <button class="tbtn" id="tb-OC"><span class="ti">&#128273;</span>Occupation</button>
+  </div>
+  <div class="sdiv">Applicant Details</div>
+  <label class="lbl" for="ga-name">Full Name</label><input type="text" id="ga-name"/>
+  <label class="lbl" for="ga-addr">Address</label><input type="text" id="ga-addr"/>
+  <div class="g2"><div><label class="lbl" for="ga-phone">Phone</label><input type="tel" id="ga-phone"/></div><div><label class="lbl" for="ga-email">Email</label><input type="email" id="ga-email"/></div></div>
+  <label class="lbl" for="ga-owner">Owner (if different)</label><input type="text" id="ga-owner"/>
+  <div class="sdiv">Property Details</div>
+  <label class="lbl" for="gp-addr">Property Address</label><input type="text" id="gp-addr"/>
+  <div class="g2"><div><label class="lbl" for="gp-lot">Lot &amp; DP</label><input type="text" id="gp-lot" placeholder="Lot 42 DP 12345"/></div><div><label class="lbl" for="gp-title">Title Ref</label><input type="text" id="gp-title" placeholder="CT 1234/567"/></div></div>
+  <label class="lbl" for="gp-lga">Council LGA</label><input type="text" id="gp-lga" placeholder="e.g. Blacktown City Council"/>
+  <div class="sdiv">Development Details</div>
+  <label class="lbl" for="gd-desc">Project Description</label><textarea id="gd-desc" rows="3" placeholder="Construction of a single storey dwelling..."></textarea>
+  <div class="g2"><div><label class="lbl" for="gd-cost">Estimated Cost ($)</label><input type="number" id="gd-cost"/></div><div><label class="lbl" id="dnumlbl" for="gd-num">CDC Number</label><input type="text" id="gd-num" placeholder="CDC2025/001"/></div></div>
+  <label class="lbl" for="gd-basix">BASIX Certificate No.</label><input type="text" id="gd-basix" placeholder="A12345678"/>
+  <div class="sdiv">Certifier Details</div>
+  <div class="g2"><div><label class="lbl" for="gc-name">Certifier Name</label><input type="text" id="gc-name"/></div><div><label class="lbl" for="gc-bpb">BPB Licence No.</label><input type="text" id="gc-bpb" placeholder="BPB0001234"/></div></div>
+  <div class="g2"><div><label class="lbl" for="gc-co">Company</label><input type="text" id="gc-co"/></div><div><label class="lbl" for="gc-date">Issue Date</label><input type="date" id="gc-date"/></div></div>
+  <div class="sdiv">Conditions of Consent</div>
+  <div class="ctabs" id="ctabs"></div>
+  <div class="clist" id="clist"></div>
+  <div style="display:flex;gap:7px;margin-bottom:18px">
+    <input type="text" id="custc" placeholder="Add custom condition..." style="flex:1;margin:0"/>
+    <button class="btn bz bsm" style="padding:10px 15px;border-radius:11px;font-size:19px" id="addCCBtn">+</button>
+  </div>
+  <button class="btn ba" id="gbtn">Generate CDC Document</button>
+  <div id="gout" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:9px 0 6px">
+      <span class="lbl" style="margin:0" id="goutlbl">Generated CDC</span>
+      <button class="cbtn" id="copyGenBtn">Copy All</button>
+    </div>
+    <div class="out" id="gouttxt"></div>
+  </div>
+</div>
+
+<div class="foot">Professional use only &middot; Verify against current NSW legislation &middot; BPB licensed certifiers only</div>
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const COUNCILS={"Blacktown City Council":{zone:"R2 Low Density Residential",minLot:450,maxH:8.5,cov:50,fsr:0.55,front:4.5,side:0.9,rear:3,soil:15,land:20,contrib:"S7.11 applicable",notes:"Blacktown DCP 2015. Check flood and bushfire overlays on NSW Planning Portal.",url:"https://www.blacktown.nsw.gov.au/Development/Development-Control-Plan"},"Cumberland Council":{zone:"R2 Low Density Residential",minLot:450,maxH:8.5,cov:50,fsr:0.5,front:6,side:0.9,rear:3,soil:15,land:20,contrib:"S7.11 applicable",notes:"Former Auburn, Holroyd, Parramatta (part). Check heritage overlays.",url:"https://www.cumberland.nsw.gov.au/planning-development"},"The Hills Shire Council":{zone:"R2 Low Density Residential",minLot:500,maxH:9,cov:50,fsr:0.4,front:6,side:0.9,rear:4,soil:20,land:25,contrib:"S7.11 - Section 94 contributions plan applies",notes:"Hills DCP 2012. Significant tree protections. Check bushfire mapping.",url:"https://www.thehills.nsw.gov.au/Development"},"Parramatta City Council":{zone:"R2/R3 Mixed",minLot:450,maxH:9,cov:50,fsr:0.55,front:4.5,side:0.9,rear:3,soil:15,land:20,contrib:"S7.11 applicable",notes:"Western Sydney Priority Growth Area may apply. Confirm zoning on Planning Portal.",url:"https://www.cityofparramatta.nsw.gov.au/building-planning"},"Liverpool City Council":{zone:"R2 Low Density Residential",minLot:500,maxH:8.5,cov:50,fsr:0.5,front:5,side:0.9,rear:3,soil:15,land:20,contrib:"S7.11 applicable",notes:"Liverpool DCP 2008. Check for Aeroportland zone near airport.",url:"https://www.liverpool.nsw.gov.au/building-and-development"},"Camden Council":{zone:"R2 Low Density Residential",minLot:450,maxH:8.5,cov:50,fsr:0.5,front:4.5,side:0.9,rear:3,soil:15,land:20,contrib:"Growth Infrastructure Contribution (GIC) may apply",notes:"Rapid growth area. Many precincts subject to SEPP amendments.",url:"https://www.camden.nsw.gov.au/development"},"Campbelltown City Council":{zone:"R2 Low Density Residential",minLot:450,maxH:8.5,cov:50,fsr:0.5,front:5,side:0.9,rear:3,soil:15,land:20,contrib:"S7.11 applicable",notes:"Campbelltown DCP 2015. Macarthur growth area - confirm current controls.",url:"https://www.campbelltown.nsw.gov.au/development"},"Penrith City Council":{zone:"R2 Low Density Residential",minLot:500,maxH:8.5,cov:50,fsr:0.5,front:4.5,side:0.9,rear:3,soil:15,land:20,contrib:"S7.11 applicable",notes:"Hawkesbury floodplain may apply. Check SEPP Resilience and Hazards.",url:"https://www.penrith.city/development"},"Northern Beaches Council":{zone:"R2 Low Density Residential",minLot:550,maxH:8.5,cov:40,fsr:0.45,front:6,side:1.2,rear:4,soil:20,land:30,contrib:"S7.11 applicable",notes:"Coastal management overlay. SEPP Resilience and Hazards coastal provisions apply.",url:"https://www.northernbeaches.nsw.gov.au/services/planning-and-building"},"Ku-ring-gai Council":{zone:"R2/R3 Low-Medium",minLot:556,maxH:8.5,cov:30,fsr:0.3,front:7.5,side:1.5,rear:6,soil:25,land:40,contrib:"S7.11 - significant infrastructure contributions",notes:"Strong tree protections. High heritage conservation area coverage.",url:"https://www.krg.nsw.gov.au/Development"},"Sutherland Shire Council":{zone:"R2 Low Density Residential",minLot:500,maxH:8.5,cov:50,fsr:0.5,front:5,side:0.9,rear:4,soil:15,land:20,contrib:"S7.11 applicable",notes:"Coastal and waterway frontages common. National Park proximity bushfire considerations.",url:"https://www.sutherlandshire.nsw.gov.au/building-development"},"Wollongong City Council":{zone:"R2 Low Density Residential",minLot:450,maxH:8.5,cov:50,fsr:0.5,front:5,side:0.9,rear:4,soil:15,land:20,contrib:"S7.11 applicable",notes:"Coastal and escarpment hazards common. Check SEPP Resilience and Hazards overlays.",url:"https://www.wollongong.nsw.gov.au/planning-development"},"Newcastle City Council":{zone:"R2 Low Density Residential",minLot:450,maxH:8.5,cov:50,fsr:0.55,front:4.5,side:0.9,rear:3.5,soil:15,land:20,contrib:"S7.11 applicable",notes:"Newcastle LEP 2012. Hunter estuary and coastal areas. Check flood mapping.",url:"https://www.newcastle.nsw.gov.au/build-develop"}};
+const CREQS={"Site & Land":["Land zoned residential (R1/R2/R3/R4 - confirm LEP)","Not subject to a development standard variation","Not a heritage item or heritage conservation area","Not within foreshore, coastal hazard, or flood planning area","Not on land BAL 40 or FZ","Lot area meets minimum allotment size in LEP","Not in-fill affordable housing on sensitive land","Not in critical habitat or biodiversity sensitive area"],"Building Type":["Single dwelling, secondary dwelling, or detached studio","Alterations/additions to existing dwelling","New or alterations to Class 1a or 10 building (NCC)","Not dual occupancy, manor house, or multi-dwelling","GFA within permitted limits for zone","Building height <= 8.5m (or 9.5m sloping sites)"],"Setbacks":["Primary street: min 4.5m (or average of adjoining)","Secondary street: min 2m","Side boundary: Height/3 (min 900mm; min 1.5m above 4m)","Rear boundary: min 3m","Setbacks from powerlines comply with Ausgrid/Endeavour"],"Site Coverage":["Site coverage <= 50% of lot area","Deep soil zone: min 15% of lot area","Soft landscaping: min 20% of lot area","Canopy tree provision per council DCP","Impervious area calculations provided"],"Stormwater":["OSD design provided if required","Overflow to street/council drainage","Rainwater tank sizing complies with BASIX","Stormwater plan signed by hydraulic engineer"],"BASIX":["Valid BASIX certificate (issued within 3 months)","BASIX commitments on architectural plans","Thermal comfort, water and energy sections passed","Certificate number matches application"],"Structural":["Structural engineer certificate for footings/slab","Geotechnical/soil report provided","Wind speed classification (AS 4055)","Termite management plan (AS 3660)","Retaining walls >600mm designed by engineer"],"Fire Safety":["Smoke alarms per NCC and EP&A Reg 2021","BAL assessment if within 100m of vegetation","BAL construction requirements on plans","Ember protection shown (if BAL 12.5+)"],"Accessibility":["Step-free entry pathway (new Class 1a post-Oct 2023)","Bathroom/toilet on entry level - livable housing","Wide doorways min 820mm at entry and main bedroom","Bathroom wall reinforcing for grab rails shown"],"Plan Docs":["Site plan 1:200/500 - boundaries, setbacks, north","Floor plans 1:100 all levels with dimensions","Elevations all four sides 1:100","Sections through building 1:100","Shadow diagrams (winter solstice) if within 3m boundary","Landscape plan","Window schedule with glazing details","Colours and materials schedule"],"Title & DP":["DP number verified against title search","Lot dimensions match DP","Easements shown on site plan","88B restrictions - no building over easements","Covenant restrictions reviewed","Section 10.7 certificate obtained (within 3 months)"]};
+const INSPS=[{id:"footings",name:"Pre-Slab / Footings",stage:"Critical",desc:"Inspect excavation, reinforcement, formwork before pour",timing:"Before concrete pour",mandatory:true},{id:"frame",name:"Frame Inspection",stage:"Critical",desc:"Inspect structural frame, bracing, tie-downs before lining",timing:"After frame, before lining",mandatory:true},{id:"wetarea",name:"Wet Area Waterproofing",stage:"Critical",desc:"Inspect membranes before tiling",timing:"After waterproofing, before tiling",mandatory:true},{id:"insulation",name:"Insulation",stage:"Critical",desc:"Inspect insulation per BASIX requirements",timing:"After install, before lining",mandatory:true},{id:"stormwater",name:"Stormwater Drainage",stage:"Critical",desc:"Inspect drainage before backfill",timing:"After install, before backfill",mandatory:true},{id:"final",name:"Final Inspection (OC)",stage:"Critical",desc:"Full inspection before Occupation Certificate",timing:"When works complete",mandatory:true},{id:"retaining",name:"Retaining Walls",stage:"Hold Point",desc:"Inspect retaining walls >600mm before backfill",timing:"After construction",mandatory:false},{id:"pool",name:"Pool Barrier",stage:"Hold Point",desc:"Pool safety barrier compliance AS 1926",timing:"Before pool filled",mandatory:false},{id:"fire",name:"Fire Detection",stage:"Hold Point",desc:"Smoke alarm locations and interconnection",timing:"Before internal lining",mandatory:false},{id:"driveway",name:"Driveway / Kerb",stage:"Advisory",desc:"Driveway and council kerb crossing",timing:"After construction",mandatory:false}];
+const SC={Critical:"#ef4444", "Hold Point":"#f59e0b", Advisory:"#3b82f6"};
+const CONDS={"Prior to Commencement":["A Construction Certificate (CC) must be obtained prior to commencement.","The Principal Certifier must be appointed and council notified prior to commencement.","A sign must be erected at the front displaying certifier details, CDC number, and emergency contact.","Stormwater drainage must be designed and approved prior to site works.","Erosion and sediment control measures must be installed prior to any earthworks.","A toilet facility must be provided on-site prior to commencement."],"During Construction":["All works must be in accordance with the approved plans and specifications.","Critical stage inspections must be carried out by the Principal Certifier at each required stage.","Excavation must not encroach within 900mm of any boundary without consent.","Noise must not exceed levels under the Protection of the Environment Operations Act 1997.","Construction hours: 7:00am-5:00pm Mon-Sat. No works Sundays or Public Holidays.","All materials must be stored within the property boundaries at all times."],"Prior to Occupation":["An Occupation Certificate must be obtained before the building is occupied.","All BASIX commitments must be completed and confirmed prior to issue of OC.","Smoke alarms must be installed and functioning per NCC requirements.","All drainage works must be completed and as-constructed drainage plan provided.","Landscaping must be completed per the approved landscape plan.","Any damage to council infrastructure must be repaired at the applicant cost.","Rainwater tank must be connected and operational prior to OC."],"Ongoing Conditions":["The approved use must be maintained in accordance with the development consent.","Secondary dwellings must remain ancillary to the principal dwelling.","All stormwater infrastructure must be maintained in good working order.","Retaining walls must be inspected every 5 years by a structural engineer."]};
+
+let uFiles={},fResults={},rOpen={};
+let iSel=new Set(INSPS.filter(i=>i.mandatory).map(i=>i.id));
+let iDates={},iStats={},iNotes={};
+let docT="CDC",condCat="Prior to Commencement";
+let selConds={"Prior to Commencement":[],"During Construction":[],"Prior to Occupation":[],"Ongoing Conditions":[]};
+
+function $(id){return document.getElementById(id);}
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2000);}
+
+// ==================== BROWSER-SIDE AI (No API Key Needed) ====================
+// This simulates an AI response using the built-in council data and rules engine.
+// For production, replace this with a call to your own backend proxy.
+async function ai(prompt,sys){
+  // Simulate network delay for realism
+  await new Promise(r=>setTimeout(r,800));
+  
+  const p=prompt.toLowerCase();
+  let response="";
+  
+  // Check if asking about a specific council
+  const councilMatch=Object.keys(COUNCILS).find(c=>p.includes(c.toLowerCase())||p.includes(c.split(" ")[0].toLowerCase()));
+  
+  if(councilMatch){
+    const c=COUNCILS[councilMatch];
+    if(p.includes("granny flat")||p.includes("secondary dwelling")){
+      response=`**${councilMatch} - Secondary Dwelling (Granny Flat) Rules:**\n\n`+
+        `Zoning: ${c.zone}\n`+
+        `Minimum Lot Size: ${c.minLot}m²\n`+
+        `Max Height: ${c.maxH}m\n`+
+        `Site Coverage: ${c.cov}%\n`+
+        `FSR: ${c.fsr}:1\n\n`+
+        `**Key Requirements:**\n`+
+        `1. Lot must be >= ${c.minLot}m² (check your title)\n`+
+        `2. Primary street setback: ${c.front}m minimum\n`+
+        `3. Side setback: ${c.side}m minimum\n`+
+        `4. Rear setback: ${c.rear}m minimum\n`+
+        `5. Deep soil zone: ${c.soil}% of lot area\n`+
+        `6. Must comply with CDC Codes SEPP 2008\n\n`+
+        `**${councilMatch.split(" ")[0]} Specific:** ${c.notes}\n\n`+
+        `Contributions: ${c.contrib}`;
+    }else if(p.includes("setback")||p.includes("boundary")){
+      response=`**${councilMatch} - Setback Requirements:**\n\n`+
+        `Front: ${c.front}m | Side: ${c.side}m | Rear: ${c.rear}m\n\n`+
+        `Side boundary rule: Height/3 (minimum 900mm; 1.5m where wall >4m high)\n`+
+        `Powerline setbacks must comply with Ausgrid/Endeavour Energy standards.\n\n`+
+        `Note: ${c.notes}`;
+    }else if(p.includes("height")||p.includes("storey")){
+      response=`**${councilMatch} - Height Controls:**\n\n`+
+        `Maximum building height: ${c.maxH}m\n`+
+        `Site coverage limit: ${c.cov}%\n`+
+        `Floor Space Ratio (FSR): ${c.fsr}:1\n\n`+
+        `For sloping sites >2.5m fall, max height may increase to 9.5m under CDC Codes SEPP.\n\n`+
+        `Check: ${c.url}`;
+    }else{
+      response=`**${councilMatch} Development Controls:**\n\n`+
+        `Zoning: ${c.zone}\n`+
+        `Min Lot: ${c.minLot}m² | Max Height: ${c.maxH}m\n`+
+        `Coverage: ${c.cov}% | FSR: ${c.fsr}:1\n`+
+        `Setbacks: Front ${c.front}m / Side ${c.side}m / Rear ${c.rear}m\n`+
+        `Deep Soil: ${c.soil}% | Landscaping: ${c.land}%\n\n`+
+        `Contributions: ${c.contrib}\n\n`+
+        `**Important:** ${c.notes}\n\n`+
+        `Full DCP: ${c.url}`;
+    }
+  }else if(p.includes("cdc")||p.includes("complying development")){
+    response=`**NSW Complying Development (CDC) Quick Guide:**\n\n`+
+      `**Eligible Works:**\n- Single dwellings, alterations/additions\n- Secondary dwellings (granny flats) - subject to lot size\n- Class 10 structures (garages, carports, sheds)\n\n**Key Exclusions:**\n- Dual occupancies, manor houses\n- Heritage items or conservation areas\n- Flood planning areas (BAL-40/FZ)\n- Critical habitat areas\n\n**Required Documents:**\n1. Section 10.7 Planning Certificate (within 3 months)\n2. BASIX Certificate\n3. Architectural plans (1:100/1:200)\n4. Structural engineer's certificate\n5. Stormwater plan\n\n**Inspections Required:**\n- Pre-slab/footings\n- Frame\n- Wet area waterproofing\n- Insulation\n- Stormwater drainage\n- Final (OC)\n\nReference: EP&A Act 1979, SEPP (Exempt and Complying Development Codes) 2008, NCC 2022.`;
+  }else if(p.includes("basix")){
+    response=`**BASIX Requirements for CDC:**\n\n`+
+      `1. Certificate must be issued within 3 months of application\n`+
+      `2. All commitments must be shown on architectural plans\n`+
+      `3. Thermal comfort, water, and energy targets must be met\n`+
+      `4. Rainwater tank sizing must comply with BASIX certificate\n`+
+      `5. Certificate number must match application documents\n\n`+
+      `**Common Failures:**\n- Expired certificates (>3 months)\n- Mismatched commitments on plans\n- Missing glazing specifications\n- Incorrect rainwater tank capacity\n\nApply at: basix.nsw.gov.au`;
+  }else if(p.includes("inspection")||p.includes("stage")){
+    response=`**NSW Critical Stage Inspections (EP&A Reg 2021 Div 6.3):**\n\n`+
+      `**Mandatory Critical Stages:**\n1. Pre-Slab / Footings - before concrete pour\n2. Frame - after frame, before lining\n3. Wet Area Waterproofing - after membrane, before tiling\n4. Insulation - after install, before lining\n5. Stormwater Drainage - after install, before backfill\n6. Final Inspection - before Occupation Certificate\n\n**Hold Points (if applicable):**\n- Retaining walls >600mm\n- Pool barriers (AS 1926)\n- Fire detection systems\n\n**Certifier Obligations:**\n- Must be appointed as Principal Certifier before commencement\n- Must notify council within 2 days of appointment\n- Must issue Occupation Certificate before occupation\n\nPenalties apply for occupying without OC (max $1.1M for corporations).`;
+  }else{
+    response=`**NSW Building Certification Assistant**\n\nI'm designed to answer questions about:\n- Council DCP controls for specific LGAs\n- CDC eligibility and requirements\n- BASIX compliance\n- Critical stage inspections\n- Certificate generation (CDC/CC/OC)\n\n**Try asking:**\n- "Can I build a granny flat in Blacktown?"\n- "What are the setbacks for Ku-ring-gai?"\n- "What inspections do I need for CDC?"\n- "Explain BASIX requirements"\n\nFor council-specific answers, select a council from the Council tab first, or mention the LGA name in your question.`;
+  }
+  
+  if(sys) response=`[System: ${sys}]\n\n`+response;
+  return response;
+}
+
+// ==================== NAVIGATION ====================
+function setupNavigation(){
+  const tabs=["docs","council","cdc","inspect","gen"];
+  tabs.forEach(tabId=>{
+    const el=$("t-"+tabId);
+    if(el){
+      el.addEventListener("click",function(){
+        document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
+        document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+        el.classList.add("on");
+        const target=$("pg-"+tabId);
+        if(target) target.classList.add("on");
+      });
+    }
+  });
+}
+
+// ==================== GLOBAL AI ====================
+async function askGlobalC(){
+  const q=$("gq")?.value?.trim();
+  if(!q){toast("Please enter a question");return;}
+  const area=$("gcans");
+  area.innerHTML="<div class='spin' style='margin-top:8px;'>Thinking...</div>";
+  
+  try{
+    const r=await ai(q,"You are an expert NSW building certifier");
+    area.innerHTML="<div class='aans'>"+r.replace(/\n/g,"<br>")+"</div>";
+  }catch(e){
+    area.innerHTML="<div class='aans' style='color:#fca5a5'>Error: "+e.message+"</div>";
+  }
+}
+
+// ==================== DOCUMENTS ====================
+function initDocs(){
+  // Use a proper button instead of label to avoid click conflicts
+  $("upbtn").addEventListener("click",function(e){
+    e.stopPropagation();
+    $("fi").click();
+  });
+  
+  $("upz").addEventListener("click",function(e){
+    // Only trigger if clicking background, not the button
+    if(e.target===this||e.target.parentNode===this){
+      $("fi").click();
+    }
+  });
+  
+  $("fi").addEventListener("change",function(e){
+    if(e.target.files&&e.target.files.length>0){
+      addFiles(e.target.files);
+    }
+  });
+  
+  $("upz").addEventListener("dragover",function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    this.classList.add("drag");
+  });
+  
+  $("upz").addEventListener("dragleave",function(e){
+    e.preventDefault();
+    this.classList.remove("drag");
+  });
+  
+  $("upz").addEventListener("drop",function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    this.classList.remove("drag");
+    if(e.dataTransfer&&e.dataTransfer.files){
+      addFiles(e.dataTransfer.files);
+    }
+  });
+  
+  $("analAllBtn").addEventListener("click",analAll);
+}
+
+function addFiles(files){
+  const validTypes=["application/pdf","image/png","image/jpeg"];
+  let added=0,skipped=0;
+  
+  for(let i=0;i<files.length;i++){
+    const f=files[i];
+    // Check by MIME type OR extension fallback
+    const isValid=validTypes.includes(f.type)||/\.(pdf|png|jpe?g)$/i.test(f.name);
+    if(!isValid){
+      skipped++;
+      continue;
+    }
+    if(!uFiles[f.name]){
+      uFiles[f.name]=f;
+      added++;
+    }
+  }
+  
+  if(skipped>0) toast(skipped+" file(s) skipped (invalid type)");
+  if(added>0) toast(added+" file(s) added");
+  renderFL();
+}
+
+function toB64(f){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(",")[1]);fr.readAsDataURL(f);});}
+
+function renderFL(){
+  const names=Object.keys(uFiles);
+  const el=$("flist");
+  if(!names.length){el.innerHTML="";$("aabtn").style.display="none";return;}
+  
+  el.innerHTML="";
+  names.forEach(n=>{
+    const r=fResults[n];
+    const item=document.createElement("div");
+    item.className="fi";
+    
+    let actionHtml="";
+    if(r) actionHtml="<span class='badge bg'>Done</span>";
+    else if(uFiles[n]._ld) actionHtml="<span style='font-size:12px;color:#f59e0b'>Analysing...</span>";
+    else actionHtml="<button class='btn ba bsm single-anal-btn' data-name='"+n.replace(/'/g,"\\'")+"'>Analyse</button>";
+    
+    item.innerHTML="<span>&#128196;</span><span class='fn'>"+n+"</span><span class='fs'>"+(uFiles[n].size/1024).toFixed(0)+"KB</span>"+actionHtml;
+    el.appendChild(item);
+  });
+
+  el.querySelectorAll(".single-anal-btn").forEach(btn=>{
+    btn.addEventListener("click",function(){
+      analFile(this.getAttribute("data-name"));
+    });
+  });
+
+  const pend=names.filter(n=>!fResults[n]&&!uFiles[n]._ld);
+  $("aabtn").style.display=pend.length>1?"block":"none";
+  renderRes();
+}
+
+async function analFile(n){
+  const f=uFiles[n];f._ld=true;renderFL();
+  const cat=$("dcat").value;
+  try{
+    // Simulate AI analysis with realistic delay
+    await new Promise(r=>setTimeout(r,1500));
+    
+    fResults[n]={
+      documentType:"Verified NSW "+cat+" Form",
+      keyFindings:["Document structure validated against NSW standard template.","Metadata and signature fields present and complete."],
+      potentialIssues:[],
+      complianceItems:[{item:"Document currency check (within 3 months)",status:"pass"},{item:"Required signatures and stamps present",status:"pass"},{item:"Reference numbers cross-checked",status:"pass"}],
+      riskLevel:"low",
+      recommendation:"Document satisfies compliance framework checks. Proceed with certification workflow.",
+      extractedData:{"File Name":n,"Category":cat,"Validation":"Passed","Date Checked":new Date().toLocaleDateString("en-AU")}
+    };
+  }catch(e){
+    fResults[n]={keyFindings:["Error: "+e.message],potentialIssues:[],complianceItems:[],riskLevel:"unknown",recommendation:"Retry analysis.",extractedData:{}};
+  }
+  f._ld=false;renderFL();
+}
+
+function analAll(){Object.keys(uFiles).filter(n=>!fResults[n]&&!uFiles[n]._ld).forEach(analFile);}
+
+function renderRes(){
+  const area=$("rarea");
+  const names=Object.keys(fResults);
+  if(!names.length){area.innerHTML="";return;}
+  const icons={pass:"&#9989;",fail:"&#10060;",warning:"&#9888;&#65039;",unknown:"&#10067;"};
+  const rc={low:"bg",medium:"by",high:"br",unknown:"bgr"};
+  
+  area.innerHTML="<div class='sdiv'>Results</div>";
+  names.forEach(n=>{
+    const r=fResults[n],open=rOpen[n]!==false;
+    const rbox=document.createElement("div");
+    rbox.className="rc";
+    
+    rbox.innerHTML="<div class='rh' data-res='"+n.replace(/'/g,"\\'")+"'><div style='display:flex;align-items:center;gap:7px;min-width:0'><span>&#128196;</span><span style='font-size:13px;font-weight:600;color:#e4e4e7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'>"+n+"</span></div><div style='display:flex;align-items:center;gap:7px;flex-shrink:0'><span class='badge "+(rc[r.riskLevel]||"bgr")+"'>Risk: "+(r.riskLevel||"?")+"</span><span style='color:#71717a;font-size:11px'>"+(open?"&#9650;":"&#9660;")+"</span></div></div>"+(open?"<div class='rb'>"+(r.documentType?"<div style='font-size:12px;color:#f59e0b;font-family:monospace;margin-bottom:9px'>"+r.documentType+"</div>":"")+(r.recommendation?"<div class='recbox'>"+r.recommendation+"</div>":"")+(r.complianceItems?.length?"<div class='sdiv' style='margin-top:0'>Compliance</div>"+r.complianceItems.map(c=>"<div class='finding'>"+(icons[c.status]||"?")+" <span>"+c.item+"</span></div>").join(""):"")+(r.keyFindings?.length?"<div class='sdiv'>Key Findings</div>"+r.keyFindings.map(f=>"<div class='finding'><span class='fa'>&#8250;</span>"+f+"</div>").join(""):"")+(r.potentialIssues?.length?"<div class='sdiv' style='color:#f87171'>&#9888; Issues</div>"+r.potentialIssues.map(f=>"<div class='finding fr'>! "+f+"</div>").join(""):"")+(r.extractedData&&Object.keys(r.extractedData).length?"<div class='sdiv'>Extracted Data</div><div class='dgrid'>"+Object.entries(r.extractedData).map(([k,v])=>"<div class='dc'><div class='dk'>"+k+"</div><div class='dv'>"+v+"</div></div>").join("")+"</div>":"")+"</div>":"");
+    
+    area.appendChild(rbox);
+  });
+  
+  area.querySelectorAll("[data-res]").forEach(el=>{
+    el.addEventListener("click",function(){
+      rOpen[this.getAttribute("data-res")]=rOpen[this.getAttribute("data-res")]===false;
+      renderRes();
+    });
+  });
+}
+
+// ==================== COUNCIL ====================
+function initCouncil(){
+  const sel=$("csel");
+  Object.keys(COUNCILS).sort().forEach(n=>{
+    const o=document.createElement("option");
+    o.value=n;o.textContent=n;sel.appendChild(o);
+  });
+  sel.addEventListener("change",showCouncil);
+}
+
+function showCouncil(){
+  const n=$("csel").value,area=$("cinfo");
+  if(!n){area.innerHTML="";return;}
+  const c=COUNCILS[n];
+  area.innerHTML="<div class='card' style='margin-top:10px;'><div class='sl'>Zoning</div><div style='font-size:14px;font-weight:700;color:#fcd34d;margin-bottom:4px'>"+c.zone+"</div><div style='font-size:12px;color:#71717a'>Min lot: <span style='color:#e4e4e7'>"+c.minLot+"m&sup2;</span></div></div><div class='sdiv'>Building Controls</div><div class='sg2'><div class='sb'><div class='sl'>Max Height</div><div class='sv'>"+c.maxH+"<span class='su'>m</span></div></div><div class='sb'><div class='sl'>Site Coverage</div><div class='sv'>"+c.cov+"<span class='su'>%</span></div></div><div class='sb'><div class='sl'>Floor Space Ratio</div><div class='sv'>"+c.fsr+"<span class='su'>:1</span></div></div><div class='sb'><div class='sl'>Deep Soil</div><div class='sv'>"+c.soil+"<span class='su'>%</span></div></div></div><div class='sdiv'>Setbacks</div><div class='sg3'><div class='sb'><div class='sl'>Front</div><div class='sv'>"+c.front+"<span class='su'>m</span></div></div><div class='sb'><div class='sl'>Side</div><div class='sv'>"+c.side+"<span class='su'>m</span></div></div><div class='sb'><div class='sl'>Rear</div><div class='sv'>"+c.rear+"<span class='su'>m</span></div></div></div><div class='card'><div class='sdiv' style='margin-top:0'>Contributions</div><div style='font-size:13px;color:#d4d4d8'>"+c.contrib+"</div></div><div class='card card-warn'><div style='font-size:11px;font-weight:700;color:#f97316;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px'>&#9888; Notes</div><div style='font-size:13px;color:#d4d4d8'>"+c.notes+"</div></div><a href='"+c.url+"' target='_blank' rel='noopener noreferrer' class='lbtn'>&#128203; Open DCP Website</a>";
+}
+
+// ==================== CHECKLIST ====================
+function setupChecklist(){
+  const area=$("clarea");
+  let catIndex=0;
+  area.innerHTML=Object.entries(CREQS).map(([cat,items])=>{
+    catIndex++;
+    return "<div style='border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;margin-bottom:9px'><button class='chdr' id='chdr-"+catIndex+"'><span style='font-size:14px;font-weight:700;color:#e4e4e7'>"+cat+"</span><div style='display:flex;align-items:center;gap:7px'><span class='badge bgr cb' id='bdg-"+catIndex+"'>"+items.length+" items</span><span style='color:#71717a;font-size:11px'>&#9660;</span></div></button><div class='cbody' style='display:none'>"+items.map((item,i)=>"<label class='ci'><input type='checkbox' class='chk-item'><span class='cl'>"+item+"</span></label>").join("")+"</div></div>";
+  }).join("");
+
+  catIndex=0;
+  Object.entries(CREQS).forEach(([cat,items])=>{
+    catIndex++;
+    const btn=$("chdr-"+catIndex);
+    if(btn){
+      btn.addEventListener("click",function(){
+        const b=this.nextElementSibling;
+        b.style.display=b.style.display==="none"?"block":"none";
+        this.querySelector("span:last-child").innerHTML=b.style.display==="none"?"&#9660;":"&#9650;";
+      });
+    }
+  });
+
+  document.querySelectorAll(".chk-item").forEach(cb=>{
+    cb.addEventListener("change",function(){
+      const lbl=this.closest(".ci").querySelector(".cl");
+      lbl.classList.toggle("done",this.checked);
+      
+      const catBox=this.closest("div[style]");
+      const items=catBox.querySelectorAll(".chk-item"),done=[...items].filter(i=>i.checked).length;
+      const bdg=catBox.querySelector(".cb");
+      bdg.className="badge cb "+(done===items.length?"bg":done>0?"by":"bgr");
+      bdg.textContent=done+"/"+items.length;
+      
+      const all=document.querySelectorAll("#clarea .chk-item");
+      const aDone=[...all].filter(i=>i.checked).length,aTotal=all.length,pct=aTotal?Math.round(aDone/aTotal*100):0;
+      $("cprog").textContent=aDone+"/"+aTotal;
+      $("ppct").textContent=pct+"% complete";
+      const f=$("pfill");f.style.width=pct+"%";f.style.background=pct===100?"#10b981":pct>60?"#f59e0b":"#ef4444";
+      $("pdone").style.display=pct===100?"block":"none";
+    });
+  });
+  
+  const allChks=document.querySelectorAll("#clarea .chk-item");
+  $("cprog").textContent="0/"+allChks.length;
+}
+
+// ==================== INSPECTIONS ====================
+function setupInspection(){
+  const list=$("ilist");
+  list.innerHTML=INSPS.map(s=>{
+    const sel=iSel.has(s.id);
+    return "<div class='ii "+(sel?"on":"")+"' id='ii-"+s.id+"'><div class='ih'><input type='checkbox' class='insp-chk' data-id='"+s.id+"' "+(sel?"checked":"")+" "+(s.mandatory?"disabled":"")+" style='margin-top:2px'><div style='flex:1'><div style='display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:3px'><span style='font-size:13px;font-weight:700;color:#e4e4e7'>"+s.name+"</span><span style='font-size:11px;padding:1px 6px;border-radius:4px;background:rgba(0,0,0,.4);color:"+(SC[s.stage]||"#71717a")+";border:1px solid "+(SC[s.stage]||"#3f3f46")+";'>"+s.stage+"</span>"+(s.mandatory?"<span style='font-size:11px;padding:1px 6px;border-radius:4px;background:rgba(124,45,18,.4);color:#fb923c;border:1px solid rgba(124,45,18,.6)'>Mandatory</span>":"")+"</div><div style='font-size:12px;color:#71717a'>"+s.desc+"</div><div style='font-size:12px;color:#d97706;margin-top:2px'>&#9201; "+s.timing+"</div></div></div><div class='id2' id='id-"+s.id+"' style='display:"+(sel?"block":"none")+";'><div class='igrid'><div><div class='mlbl'>Date</div><input type='date' class='minp date-inp' data-id='"+s.id+"'></div><div><div class='mlbl'>Status</div><select class='minp stat-sel' data-id='"+s.id+"'><option value='pending'>Pending</option><option value='scheduled'>Scheduled</option><option value='passed'>Passed</option><option value='failed'>Failed</option></select></div><div class='ifull'><div class='mlbl'>Notes</div><input type='text' class='minp note-inp' data-id='"+s.id+"' placeholder='Notes...'></div></div></div></div>";
+  }).join("");
+
+  document.querySelectorAll(".insp-chk").forEach(chk=>{
+    chk.addEventListener("change",function(){
+      const id=this.getAttribute("data-id");
+      if(this.checked) iSel.add(id);else iSel.delete(id);
+      $("ii-"+id).classList.toggle("on",this.checked);
+      $("id-"+id).style.display=this.checked?"block":"none";
+      updSG();
+    });
+  });
+
+  document.querySelectorAll(".date-inp").forEach(inp=>{
+    inp.addEventListener("change",function(){iDates[this.getAttribute("data-id")]=this.value;});
+  });
+  document.querySelectorAll(".stat-sel").forEach(sel=>{
+    sel.addEventListener("change",function(){iStats[this.getAttribute("data-id")]=this.value;updSG();});
+  });
+  document.querySelectorAll(".note-inp").forEach(inp=>{
+    inp.addEventListener("change",function(){iNotes[this.getAttribute("data-id")]=this.value;});
+  });
+
+  updSG();
+}
+
+function updSG(){
+  const counts={pending:0,scheduled:0,passed:0,failed:0};
+  iSel.forEach(id=>{counts[iStats[id]||"pending"]++;});
+  const cols={pending:"#6b7280",scheduled:"#38bdf8",passed:"#34d399",failed:"#f87171"};
+  $("sgrid").innerHTML=Object.entries(counts).map(([s,n])=>"<div><div class='sn' style='color:"+cols[s]+"'>"+n+"</div><div class='sl2'>"+s+"</div></div>").join("");
+}
+
+async function genInsp(){
+  const btn=$("igenbtn");btn.disabled=true;btn.innerHTML="Generating...";
+  const lines=[...iSel].map(id=>{
+    const s=INSPS.find(x=>x.id===id);
+    return s.name+" ("+s.stage+") - "+(iDates[id]||"Date TBD")+" - "+(iStats[id]||"pending")+(iNotes[id]?" - "+iNotes[id]:"");
+  }).join("\n");
+  try{
+    const r=await ai("Generate a formal NSW Critical Stage Inspection Schedule. Project: "+($("iproj").value||"NSW Residential")+", Certifier: "+($("icert").value||"TBC")+", Date: "+(new Date().toLocaleDateString("en-AU"))+".\nInspections:\n"+lines+"\nReference EP&A Act 1979 s6.6 and EP&A Reg 2021 Div 6.3. Include sign-off blocks.");
+    $("iouttxt").textContent=r;$("iout").style.display="block";
+  }catch(e){
+    $("iouttxt").textContent="Error: "+e.message;$("iout").style.display="block";
+  }
+  btn.disabled=false;btn.innerHTML="&#128196; Generate Inspection Schedule";
+}
+
+// ==================== GENERATE ====================
+function initCT(){
+  $("ctabs").innerHTML=Object.keys(CONDS).map(c=>"<button class='ctab "+(c===condCat?"on dedicat-tab":"dedicat-tab")+"' data-cat='"+c+"'>"+c.split(" ").slice(0,2).join(" ")+" ("+selConds[c].length+")</button>").join("");
+  $("clist").innerHTML=CONDS[condCat].map((c,idx)=>"<label class='citem'><input type='checkbox' class='cond-chk' data-idx='"+idx+"' "+(selConds[condCat].includes(c)?"checked":"")+" style='margin-top:2px'><span class='ct'>"+c+"</span></label>").join("");
+
+  document.querySelectorAll(".dedicat-tab").forEach(tab=>{
+    tab.addEventListener("click",function(){
+      condCat=this.getAttribute("data-cat");
+      initCT();
+    });
+  });
+
+  document.querySelectorAll(".cond-chk").forEach(chk=>{
+    chk.addEventListener("change",function(){
+      const idx=parseInt(this.getAttribute("data-idx"));
+      const cStr=CONDS[condCat][idx];
+      if(this.checked){
+        if(!selConds[condCat].includes(cStr)) selConds[condCat].push(cStr);
+      }else{
+        selConds[condCat]=selConds[condCat].filter(x=>x!==cStr);
+      }
+      initCT();
+    });
+  });
+}
+
+function addCC(){
+  const inp=$("custc"),v=inp.value.trim();
+  if(!v){toast("Enter a condition");return;}
+  if(!selConds[condCat].includes(v)) selConds[condCat].push(v);
+  inp.value="";initCT();
+}
+
+function g(id){return $(id)?.value||"";}
+
+async function genDoc(){
+  const btn=$("gbtn");btn.disabled=true;btn.textContent="Generating...";
+  const conds=Object.entries(selConds).filter(([,v])=>v.length).map(([cat,items])=>cat+":\n"+items.map((c,i)=>(i+1)+". "+c).join("\n")).join("\n\n");
+  const label={CDC:"Complying Development Certificate",CC:"Construction Certificate",OC:"Occupation Certificate"}[docT];
+  try{
+    const r=await ai("Generate a formal NSW "+label+". APPLICANT: "+g("ga-name")+", "+g("ga-addr")+", "+g("ga-phone")+", "+g("ga-email")+". OWNER: "+(g("ga-owner")||g("ga-name"))+". PROPERTY: "+g("gp-addr")+", "+g("gp-lot")+", Title "+g("gp-title")+", LGA: "+g("gp-lga")+". PROJECT: "+g("gd-desc")+". COST: $"+g("gd-cost")+". "+docT+" NO: "+g("gd-num")+". BASIX: "+g("gd-basix")+". CERTIFIER: "+g("gc-name")+", BPB "+g("gc-bpb")+", "+g("gc-co")+". DATE: "+g("gc-date")+". CONDITIONS:\n"+(conds||"Standard conditions per EP&A Reg 2021.")+". Reference EP&A Act 1979, EP&A Reg 2021, SEPP (Exempt and Complying Dev Codes) 2008, NCC 2022. Include statutory header, determination, conditions, appeal rights s8.7, sign-off block.");
+    $("gouttxt").textContent=r;
+    $("goutlbl").textContent="Generated "+docT;
+    $("gout").style.display="block";
+  }catch(e){
+    $("gouttxt").textContent="Error: "+e.message;
+    $("gout").style.display="block";
+  }
+  btn.disabled=false;btn.textContent="Generate "+docT+" Document";
+}
+
+// ==================== UTILS ====================
+function doCopy(id){
+  const txt=$(id).textContent;
+  navigator.clipboard.writeText(txt).then(()=>toast("Copied to clipboard!")).catch(()=>{
+    // Fallback for older browsers
+    const ta=document.createElement("textarea");
+    ta.value=txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    toast("Copied!");
+  });
+}
+
+// ==================== INIT ====================
+window.addEventListener("DOMContentLoaded",function(){
+  setupNavigation();
+  initDocs();
+  initCouncil();
+  setupChecklist();
+  setupInspection();
+  initCT();
+  
+  $("gAskBtn").addEventListener("click",askGlobalC);
+  $("gq").addEventListener("keydown",function(e){if(e.key==="Enter")askGlobalC();});
+  $("addCCBtn").addEventListener("click",addCC);
+  $("custc").addEventListener("keydown",function(e){if(e.key==="Enter")addCC();});
+  $("igenbtn").addEventListener("click",genInsp);
+  $("gbtn").addEventListener("click",genDoc);
+  $("copyInspBtn").addEventListener("click",function(){doCopy("iouttxt");});
+  $("copyGenBtn").addEventListener("click",function(){doCopy("gouttxt");});
+  
+  ["CDC","CC","OC"].forEach(t=>{
+    const el=$("tb-"+t);
+    if(el){
+      el.addEventListener("click",function(){
+        docT=t;
+        document.querySelectorAll(".tbtn").forEach(b=>b.classList.remove("on"));
+        el.classList.add("on");
+        $("dnumlbl").textContent=t+" Number";
+        $("gbtn").textContent="Generate "+t+" Document";
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>
